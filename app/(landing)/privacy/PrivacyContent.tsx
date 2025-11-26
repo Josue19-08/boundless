@@ -69,6 +69,7 @@ const tableOfContents = [
   { id: 'information-sharing', label: 'Information Sharing and Disclosure' },
   { id: 'data-security', label: 'Data Security' },
   { id: 'your-rights', label: 'Your Rights and Choices' },
+  { id: 'bounties', label: 'Bounties and Task-Based Work' },
   { id: 'cookies', label: 'Cookies and Tracking Technologies' },
   { id: 'third-party', label: 'Third-Party Services' },
   { id: 'children-privacy', label: "Children's Privacy" },
@@ -248,9 +249,9 @@ const PrivacyContent = () => {
                 </p>
                 <p>
                   We operate a platform that enables innovators to validate
-                  ideas, raise funds, and access grants and hackathons using
-                  milestone-based funding, powered by the Stellar blockchain and
-                  Trustless Work escrow APIs.
+                  ideas, raise funds, and access grants, hackathons and bounties
+                  using milestone-based funding, powered by the Stellar
+                  blockchain and Trustless Work escrow APIs.
                 </p>
                 <p>
                   By using our Platform, you consent to the data practices
@@ -602,6 +603,56 @@ const PrivacyContent = () => {
                     marketing purposes.
                   </p>
                 </div>
+              </div>
+            </section>
+
+            {/* Bounties and Task-Based Work */}
+            <section
+              id='bounties'
+              ref={setSectionRef('bounties')}
+              className='scroll-mt-24'
+            >
+              <h2 className='mb-4 text-2xl font-semibold text-white'>
+                Bounties and Task-Based Work
+              </h2>
+              <div className='space-y-4 text-sm leading-relaxed text-gray-300'>
+                <p>
+                  When you participate in bounties on Boundless, we collect and
+                  process additional information:
+                </p>
+                <div>
+                  <h3 className='mb-2 text-lg font-semibold text-white'>
+                    Bounty Creator Information
+                  </h3>
+                  <ul className='ml-6 list-disc space-y-2'>
+                    <li>
+                      Bounty descriptions, requirements, and completion criteria
+                    </li>
+                    <li>Escrow contract addresses and reward amounts</li>
+                    <li>Review and approval decisions on submissions</li>
+                    <li>Communication with bounty hunters</li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className='mb-2 text-lg font-semibold text-white'>
+                    Bounty Hunter Information
+                  </h3>
+                  <ul className='ml-6 list-disc space-y-2'>
+                    <li>Submissions, deliverables, and proof of completion</li>
+                    <li>Claim history and completion records</li>
+                    <li>Wallet addresses for receiving rewards</li>
+                    <li>
+                      Reputation and rating data based on completed bounties
+                    </li>
+                  </ul>
+                </div>
+                <p>
+                  Bounty-related information is used to facilitate task
+                  completion, verify work, process payments, and build
+                  reputation systems. Some bounty information, such as task
+                  descriptions and completion status, may be publicly visible on
+                  the Platform.
+                </p>
               </div>
             </section>
 

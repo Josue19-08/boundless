@@ -68,6 +68,7 @@ const tableOfContents = [
   { id: 'not-a-bank', label: 'Not a Bank or Financial Institution' },
   { id: 'no-investment-guarantees', label: 'No Investment Guarantees' },
   { id: 'project-risks', label: 'Project Risks' },
+  { id: 'bounties', label: 'Bounty Risks' },
   { id: 'blockchain-risks', label: 'Blockchain and Technology Risks' },
   { id: 'escrow-disclaimer', label: 'Escrow and Smart Contract Disclaimer' },
   { id: 'regulatory-compliance', label: 'Regulatory Compliance' },
@@ -242,9 +243,9 @@ const DisclaimerContent = () => {
               <div className='space-y-4 text-sm leading-relaxed text-gray-300'>
                 <p>
                   Boundless is a platform that enables innovators to validate
-                  ideas, raise funds, and access grants and hackathons using
-                  milestone-based funding, powered by the Stellar blockchain and
-                  Trustless Work escrow APIs.
+                  ideas, raise funds, and access grants, hackathons and bounties
+                  using milestone-based funding, powered by the Stellar
+                  blockchain and Trustless Work escrow APIs.
                 </p>
                 <p>
                   This Disclaimer outlines the risks, limitations, and important
@@ -422,6 +423,101 @@ const DisclaimerContent = () => {
                     future results.
                   </p>
                 </div>
+              </div>
+            </section>
+
+            {/* Bounty Risks */}
+            <section
+              id='bounties'
+              ref={setSectionRef('bounties')}
+              className='scroll-mt-24'
+            >
+              <h2 className='mb-4 text-2xl font-semibold text-white'>
+                Bounty Risks
+              </h2>
+              <div className='space-y-6 text-sm leading-relaxed text-gray-300'>
+                <p>
+                  Participating in bounties involves specific risks that you
+                  should understand:
+                </p>
+                <div>
+                  <h3 className='mb-2 text-lg font-semibold text-white'>
+                    Bounty Creator Risks
+                  </h3>
+                  <ul className='ml-6 list-disc space-y-2'>
+                    <li>
+                      Bounty hunters may submit incomplete or substandard work
+                    </li>
+                    <li>
+                      Multiple submissions may require time to review and
+                      evaluate
+                    </li>
+                    <li>
+                      Disputes may arise about whether work meets requirements
+                    </li>
+                    <li>
+                      Funds are locked in escrow until completion or
+                      cancellation
+                    </li>
+                    <li>
+                      Platform fees apply even if no satisfactory submission is
+                      received
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className='mb-2 text-lg font-semibold text-white'>
+                    Bounty Hunter Risks
+                  </h3>
+                  <ul className='ml-6 list-disc space-y-2'>
+                    <li>
+                      You may complete work that does not meet the creator's
+                      expectations
+                    </li>
+                    <li>
+                      Your submission may be rejected even if you believe it
+                      meets requirements
+                    </li>
+                    <li>
+                      Other hunters may submit work before you, potentially
+                      claiming the reward
+                    </li>
+                    <li>
+                      Bounties may be cancelled before you complete your work
+                    </li>
+                    <li>
+                      You may not receive payment if disputes are resolved
+                      against you
+                    </li>
+                    <li>
+                      Time invested in completing bounties may not result in
+                      payment
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className='mb-2 text-lg font-semibold text-white'>
+                    No Guarantees
+                  </h3>
+                  <p>Boundless does not guarantee:</p>
+                  <ul className='mt-2 ml-6 list-disc space-y-2'>
+                    <li>That bounty creators will approve your submission</li>
+                    <li>
+                      That bounty hunters will complete tasks satisfactorily
+                    </li>
+                    <li>That disputes will be resolved in your favor</li>
+                    <li>That bounties will be completed or rewards paid</li>
+                    <li>The quality or timeliness of submissions</li>
+                  </ul>
+                </div>
+                <p>
+                  <strong>
+                    You participate in bounties at your own risk. Boundless is
+                    not responsible for the quality of work submitted, approval
+                    decisions, or payment disputes between bounty creators and
+                    hunters.
+                  </strong>
+                </p>
               </div>
             </section>
 

@@ -67,6 +67,7 @@ const tableOfContents = [
   { id: 'eligibility', label: 'Eligibility' },
   { id: 'accounts', label: 'Accounts & Acceptable Use' },
   { id: 'funding', label: 'Funding & Projects' },
+  { id: 'bounties', label: 'Bounties' },
   { id: 'backer-rights', label: 'Backer Rights' },
   { id: 'hackathons', label: 'Hackathons & Grants' },
   { id: 'liability', label: 'Liability & Disclaimers' },
@@ -239,9 +240,9 @@ const TermsContent = () => {
               <div className='space-y-4 text-sm leading-relaxed text-gray-300'>
                 <p>
                   Welcome to Boundless! We are a platform that empowers
-                  innovators to validate ideas, raise funds, and access grants
-                  and hackathons using milestone-based funding, powered by the
-                  Stellar blockchain and Trustless Work escrow APIs.
+                  innovators to validate ideas, raise funds, and access grants,
+                  hackathons and bounties using milestone-based funding, powered
+                  by the Stellar blockchain and Trustless Work escrow APIs.
                 </p>
                 <p>
                   By accessing or using our Platform, you agree to be bound by

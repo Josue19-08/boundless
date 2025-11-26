@@ -67,6 +67,7 @@ const tableOfContents = [
   { id: 'our-pledge', label: 'Our Pledge' },
   { id: 'expected-behavior', label: 'Expected Behavior' },
   { id: 'unacceptable-behavior', label: 'Unacceptable Behavior' },
+  { id: 'bounties', label: 'Bounties and Task-Based Work' },
   { id: 'enforcement', label: 'Enforcement Responsibilities' },
   { id: 'scope', label: 'Scope' },
   { id: 'reporting', label: 'Reporting Violations' },
@@ -456,6 +457,88 @@ const CodeOfConductContent = () => {
                     </li>
                   </ul>
                 </div>
+              </div>
+            </section>
+
+            {/* Bounties and Task-Based Work */}
+            <section
+              id='bounties'
+              ref={setSectionRef('bounties')}
+              className='scroll-mt-24'
+            >
+              <h2 className='mb-4 text-2xl font-semibold text-white'>
+                Bounties and Task-Based Work
+              </h2>
+              <div className='space-y-6 text-sm leading-relaxed text-gray-300'>
+                <p>
+                  Bounties on Boundless are task-specific opportunities where
+                  creators post specific tasks and offer rewards for completion.
+                  All participants in the bounty system must adhere to this Code
+                  of Conduct.
+                </p>
+                <div>
+                  <h3 className='mb-2 text-lg font-semibold text-white'>
+                    Bounty Creator Expectations
+                  </h3>
+                  <ul className='ml-6 list-disc space-y-2'>
+                    <li>
+                      Provide clear, detailed task descriptions and requirements
+                    </li>
+                    <li>Set fair and reasonable reward amounts</li>
+                    <li>
+                      Review submissions promptly and provide constructive
+                      feedback
+                    </li>
+                    <li>
+                      Approve and pay for completed work that meets requirements
+                    </li>
+                    <li>Communicate respectfully with bounty hunters</li>
+                    <li>
+                      Do not cancel bounties unfairly or after work has been
+                      completed
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className='mb-2 text-lg font-semibold text-white'>
+                    Bounty Hunter Expectations
+                  </h3>
+                  <ul className='ml-6 list-disc space-y-2'>
+                    <li>Only claim bounties you can reasonably complete</li>
+                    <li>
+                      Deliver work that meets or exceeds the stated requirements
+                    </li>
+                    <li>
+                      Submit original work and disclose any third-party
+                      dependencies
+                    </li>
+                    <li>
+                      Respond professionally to feedback and revision requests
+                    </li>
+                    <li>Do not submit plagiarized or stolen work</li>
+                    <li>Do not claim multiple bounties for the same task</li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className='mb-2 text-lg font-semibold text-white'>
+                    Unacceptable Bounty Practices
+                  </h3>
+                  <ul className='ml-6 list-disc space-y-2'>
+                    <li>Creating bounties for illegal or harmful tasks</li>
+                    <li>Posting misleading or deceptive bounty descriptions</li>
+                    <li>
+                      Refusing to pay for completed work that meets requirements
+                    </li>
+                    <li>Submitting incomplete or substandard work</li>
+                    <li>Claiming bounties without intent to complete them</li>
+                    <li>Colluding to manipulate bounty outcomes</li>
+                    <li>Using multiple accounts to claim the same bounty</li>
+                  </ul>
+                </div>
+                <p>
+                  Violations of bounty-related conduct may result in warnings,
+                  temporary bans, or permanent removal from the bounty system.
+                </p>
               </div>
             </section>
 
