@@ -10,9 +10,10 @@ const getApiBaseUrl = () => {
     return '/api/proxy';
   }
   // Server-side: use direct backend URL
+  // Normalize: remove trailing slash and /api if present, then add /api
+  // The env var should be base URL without /api (e.g., https://api.boundlessfi.xyz)
   let backendUrl =
     process.env.NEXT_PUBLIC_API_URL || 'https://staging-api.boundlessfi.xyz';
-  // Remove trailing slash and /api if present
   backendUrl = backendUrl.replace(/\/$/, '').replace(/\/api$/i, '');
   return `${backendUrl}/api`;
 };

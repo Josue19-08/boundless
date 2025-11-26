@@ -17,13 +17,12 @@ const getAuthBaseURL = () => {
   }
 
   // Server-side: use direct backend URL
+  // Normalize: remove trailing slash and /api if present, then add /api/auth
+  // The env var should be base URL without /api (e.g., https://api.boundlessfi.xyz)
   const apiUrl =
     process.env.NEXT_PUBLIC_API_URL || 'https://staging-api.boundlessfi.xyz';
-  const baseURL = apiUrl.replace(/\/$/, '');
-
-  // If baseURL already ends with /api, add /auth
-  // Otherwise, add /api/auth
-  return baseURL.endsWith('/api') ? `${baseURL}/auth` : `${baseURL}/api/auth`;
+  const baseURL = apiUrl.replace(/\/$/, '').replace(/\/api$/i, '');
+  return `${baseURL}/api/auth`;
 };
 
 export const authClient = createAuthClient({
