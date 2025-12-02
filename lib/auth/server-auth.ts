@@ -1,6 +1,6 @@
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { getMe } from '@/lib/api/auth';
+import { getMeServer } from '@/lib/api/auth-server';
 import { authClient } from '@/lib/auth-client';
 
 export interface ServerUser {
@@ -91,10 +91,10 @@ export async function getServerUser(): Promise<ServerUser | null> {
       return betterAuthSession.user;
     }
 
-    // Fallback to accessToken approach (for backward compatibility)
+    // Fallback to server-side API call (for backward compatibility)
     // Better Auth handles authentication via cookies automatically
-    // No need to check for accessToken - cookies are sent automatically
-    const user = await getMe();
+    // Use server-side version that properly forwards cookies
+    const user = await getMeServer();
 
     return {
       id: (user._id || user.id) as string,

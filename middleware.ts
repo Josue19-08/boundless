@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getBetterAuthSession } from '@/lib/auth/server-auth';
+import { getBetterAuthSession, getServerUser } from '@/lib/auth/server-auth';
 
 const protectedRoutes = ['/dashboard', '/user', '/admin', '/me'];
 
@@ -11,10 +11,22 @@ export async function middleware(req: NextRequest) {
   // Get cookies from request for Better Auth session check
   const cookieHeader = req.headers.get('cookie') || '';
 
-  // Check authentication using Better Auth session
-  // In middleware, we need to pass cookies directly
-  const betterAuthSession = await getBetterAuthSession(cookieHeader);
-  const isAuthenticated = !!betterAuthSession?.user;
+  // Check authentication using the same logic as server components
+  // First try Better Auth session, then fallback to server-side user check
+  let isAuthenticated = false;
+  try {
+    const betterAuthSession = await getBetterAuthSession(cookieHeader);
+    if (betterAuthSession?.user) {
+      isAuthenticated = true;
+    } else {
+      // Fallback to server user check (which includes getMeServer call)
+      const serverUser = await getServerUser();
+      isAuthenticated = !!serverUser;
+    }
+  } catch (error) {
+    console.error('Auth check failed in middleware:', error);
+    isAuthenticated = false;
+  }
 
   const isProtectedRoute = protectedRoutes.some(route =>
     pathname.startsWith(route)

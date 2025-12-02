@@ -18,7 +18,7 @@ import {
 import { Button } from '../ui/button';
 import ActivityHeatmap from './ActivityHeatMap';
 import { FutureFeature } from '../FeatureFuture';
-import { useAuthStore } from '@/lib/stores/auth-store';
+import { useAuthStatus } from '@/hooks/use-auth';
 
 interface ProfileDataClientProps {
   user: GetMeResponse;
@@ -41,8 +41,8 @@ export default function ProfileDataClient({
 }: ProfileDataClientProps) {
   const [selectedFilter, setSelectedFilter] = useState('All');
 
-  // Get auth state from store
-  const { user: authUser, isAuthenticated } = useAuthStore();
+  // Get auth state from simplified hook
+  const { user: authUser, isAuthenticated } = useAuthStatus();
 
   // Determine if it's the user's own profile
   const isOwnProfile =
