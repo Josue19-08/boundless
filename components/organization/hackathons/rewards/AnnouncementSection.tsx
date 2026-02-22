@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Edit2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useMarkdown } from '@/hooks/use-markdown';
+import { sanitizeHtml } from '@/lib/utils/renderHtml';
 
 interface AnnouncementSectionProps {
   announcement: string;
@@ -16,49 +17,55 @@ export default function AnnouncementSection({
 }: AnnouncementSectionProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const announcementContent = useMarkdown(announcement || '', {
+  const announcementRaw = announcement || '';
+  const isLongAnnouncement = announcementRaw.length > 300;
+
+  const markdownToParse =
+    !isExpanded && isLongAnnouncement
+      ? announcementRaw.substring(0, 300) + '...'
+      : announcementRaw;
+
+  const announcementContent = useMarkdown(markdownToParse, {
     breaks: true,
     gfm: true,
   });
 
+  const handleToggleExpand = () => setIsExpanded(!isExpanded);
+
+  const sanitizedContent = sanitizeHtml(announcementContent.content);
+
   return (
-    <div className='bg-background-card rounded-lg border border-gray-900 p-6'>
-      <div className='mb-4 flex items-center justify-between'>
-        <h3 className='text-lg font-medium text-white'>Announcement</h3>
+    <div className='bg-background-card rounded-lg border border-gray-900 p-3'>
+      <div className='mb-2 flex items-center justify-between'>
+        <h3 className='text-xs font-medium text-gray-300'>Announcement</h3>
         <Button
           variant='ghost'
           size='sm'
           onClick={onEdit}
-          className='text-primary hover:bg-primary/10'
+          className='text-primary hover:bg-primary/10 h-6 px-2 py-0 text-xs'
         >
-          <Edit2 className='mr-2 h-4 w-4' />
+          <Edit2 className='mr-1 h-3 w-3' />
           Edit
         </Button>
       </div>
-      <div className='prose prose-invert max-w-none'>
+      <div className='prose prose-invert max-w-none text-xs'>
         {announcement ? (
           <>
             <div
-              className='markdown-content text-gray-300'
-              dangerouslySetInnerHTML={{
-                __html: isExpanded
-                  ? announcementContent.content
-                  : announcementContent.content.length > 500
-                    ? announcementContent.content.substring(0, 500) + '...'
-                    : announcementContent.content,
-              }}
+              className='markdown-content text-gray-400'
+              dangerouslySetInnerHTML={sanitizedContent}
             />
-            {announcementContent.content.length > 500 && (
+            {isLongAnnouncement && (
               <button
-                onClick={() => setIsExpanded(!isExpanded)}
-                className='text-primary mt-2 hover:underline'
+                onClick={handleToggleExpand}
+                className='text-primary mt-1 text-xs hover:underline'
               >
                 {isExpanded ? 'View Less' : 'View More'}
               </button>
             )}
           </>
         ) : (
-          <p className='text-gray-400'>No announcement added yet.</p>
+          <p className='text-gray-500 italic'>No announcement added yet.</p>
         )}
       </div>
     </div>
