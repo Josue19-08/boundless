@@ -183,8 +183,8 @@ export default function Hero2() {
                 prizeTiers: [
                   {
                     id: '1',
-                    place: '1',
-                    prizeAmount: '50000',
+                    name: '1',
+                    amount: '50000',
                     description: 'For the best project',
                   },
                 ],
@@ -346,8 +346,8 @@ export default function Hero2() {
                 prizeTiers: [
                   {
                     id: '1',
-                    place: '1st Place',
-                    prizeAmount: '50000',
+                    name: '1st Place',
+                    amount: '50000',
                     description: 'For the best project',
                   },
                 ],

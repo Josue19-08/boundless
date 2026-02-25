@@ -20,6 +20,7 @@ const getAuthBaseURL = () => {
 
 export const authClient = createAuthClient({
   baseURL: getAuthBaseURL(),
+  cookiePrefix: 'boundless_auth',
   plugins: [
     nextCookiesRequest,
     inferAdditionalFields({

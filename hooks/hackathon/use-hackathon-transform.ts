@@ -100,7 +100,7 @@ export function useHackathonTransform() {
       let prizeCurrency = 'USDC';
       if (hackathon.prizeTiers && hackathon.prizeTiers.length > 0) {
         prizePoolTotal = hackathon.prizeTiers.reduce(
-          (sum, tier) => sum + Number(tier.prizeAmount || 0),
+          (sum, tier) => sum + Number(tier.amount || 0),
           0
         );
         prizeCurrency = hackathon.prizeTiers[0]?.currency || 'USDC';

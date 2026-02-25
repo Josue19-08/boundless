@@ -437,12 +437,12 @@ function HackathonCard({
                 $
                 {formatFullNumber(
                   prizeTiers.reduce((acc, tier) => {
-                    const amount = Number(tier.prizeAmount);
+                    const amount = Number(tier.amount);
                     return acc + (Number.isFinite(amount) ? amount : 0);
                   }, 0)
                 )}
               </span>
-              <span className='text-xs'>{prizeTiers[0]?.place || 'Prize'}</span>
+              <span className='text-xs'>{prizeTiers[0]?.name || 'Prize'}</span>
             </div>
           )}
           {/* {participantsCount && (

@@ -313,7 +313,7 @@ export default function HackathonPageClient() {
     deadline: currentHackathon.submissionDeadline,
     startDate: currentHackathon.startDate,
     totalPrizePool: currentHackathon.prizeTiers
-      .reduce((acc, prize) => acc + Number(prize.prizeAmount || 0), 0)
+      .reduce((acc, prize) => acc + Number(prize.amount || 0), 0)
       .toString(),
     isRegistered,
     hasSubmitted,
@@ -355,17 +355,14 @@ export default function HackathonPageClient() {
                 timelineEvents={timeline_Events}
                 prizes={currentHackathon.prizeTiers.map(tier => ({
                   id: tier.id,
-                  place: tier.place,
+                  place: tier.name,
                   currency: tier.currency,
                   passMark: tier.passMark,
                   description: tier.description,
-                  prizeAmount: tier.prizeAmount,
+                  prizeAmount: tier.amount,
                 }))}
                 totalPrizePool={currentHackathon.prizeTiers
-                  .reduce(
-                    (acc, prize) => acc + Number(prize.prizeAmount || 0),
-                    0
-                  )
+                  .reduce((acc, prize) => acc + Number(prize.amount || 0), 0)
                   .toString()}
                 hackathonSlugOrId={hackathonId}
                 venue={{

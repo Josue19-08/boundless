@@ -379,10 +379,10 @@ export function HackathonDataProvider({
         {
           title: 'Grand Prize',
           rank: '1 winner',
-          prize: `${currentHackathon.prizeTiers.reduce((acc, prize) => acc + Number(prize.prizeAmount || 0), 0)} in prizes`,
+          prize: `${currentHackathon.prizeTiers.reduce((acc, prize) => acc + Number(prize.amount || 0), 0)} in prizes`,
           icon: '⭐',
           details: [
-            `Prize: ${currentHackathon.prizeTiers.reduce((acc, prize) => acc + Number(prize.prizeAmount || 0), 0)}`,
+            `Prize: ${currentHackathon.prizeTiers.reduce((acc, prize) => acc + Number(prize.amount || 0), 0)}`,
             'Premium Swag Box',
           ],
         },

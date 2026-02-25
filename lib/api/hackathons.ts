@@ -393,8 +393,8 @@ export type Hackathon = {
 
   prizeTiers: Array<{
     id?: string;
-    place?: string;
-    prizeAmount?: string;
+    name?: string;
+    amount?: string;
     currency?: string;
     description?: string;
     passMark?: number;
