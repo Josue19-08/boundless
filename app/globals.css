@@ -20,7 +20,7 @@
     --tw-prose-captions: #9ca3af;
     --tw-prose-code: #a7f950;
     --tw-prose-pre-code: #e5e7eb;
-    --tw-prose-pre-bg: #111827;
+    --tw-prose-pre-bg: var(--color-background-card);
     --tw-prose-th-borders: #374151;
     --tw-prose-td-borders: #1f2937;
   }

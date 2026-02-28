@@ -10,6 +10,7 @@ import BlogCard from './BlogCard';
 import AuthLoadingState from '@/components/auth/AuthLoadingState';
 import { useRouter } from 'next/navigation';
 import { useTransition, useCallback } from 'react';
+import './prism-theme.css';
 
 interface BlogPostDetailsProps {
   post: MdxBlogPost & { content: React.ReactElement };
@@ -96,7 +97,7 @@ const BlogPostDetails: React.FC<BlogPostDetailsProps> = ({
       {(isNavigating || isPending) && (
         <AuthLoadingState message='Loading article...' />
       )}
-      <div className='bg-background-main-bg relative z-10 mx-auto min-h-screen max-w-[1440px] justify-start space-y-[23px] px-5 py-5 text-white md:space-y-[80px] md:px-[50px] md:py-16 lg:px-[100px]'>
+      <div className='relative z-10 mx-auto min-h-screen max-w-[1440px] justify-start space-y-[23px] px-5 py-5 text-white md:space-y-[80px] md:px-[50px] md:py-16 lg:px-[100px]'>
         <div className='relative flex flex-col lg:flex-row'>
           <div className='flex-1'>
             <div className='max-w-4xl py-6 sm:py-8'>

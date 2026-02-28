@@ -1,9 +1,6 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
-
-// ---------------------------------------------------------------------------
-// Code block with syntax highlighting via <pre><code>
-// ---------------------------------------------------------------------------
+import MermaidChart from './MermaidChart';
 function MdxCode({
   children,
   className,
@@ -14,7 +11,7 @@ function MdxCode({
   if (!isBlock) {
     return (
       <code
-        className='rounded bg-[#1a1a1a] px-1.5 py-0.5 font-mono text-sm text-[#a7f950]'
+        className='bg-muted text-primary rounded px-1.5 py-0.5 font-mono text-sm'
         {...props}
       >
         {children}
@@ -31,7 +28,7 @@ function MdxCode({
 function MdxPre({ children, ...props }: React.ComponentProps<'pre'>) {
   return (
     <pre
-      className='my-6 overflow-x-auto rounded-lg border border-[#2b2b2b] bg-[#111827] p-4 text-sm leading-relaxed'
+      className='bg-background-card my-6 overflow-x-auto rounded-lg border border-gray-900 p-4 text-sm leading-relaxed'
       {...props}
     >
       {children}
@@ -44,9 +41,9 @@ function MdxPre({ children, ...props }: React.ComponentProps<'pre'>) {
 // ---------------------------------------------------------------------------
 function MdxTable({ children, ...props }: React.ComponentProps<'table'>) {
   return (
-    <div className='my-6 w-full overflow-x-auto rounded-lg border border-[#2b2b2b]'>
+    <div className='my-6 w-full overflow-x-auto rounded-lg border border-gray-900'>
       <table
-        className='w-full border-collapse text-sm text-[#d1d5db]'
+        className='text-muted-foreground w-full border-collapse text-sm'
         {...props}
       >
         {children}
@@ -57,7 +54,7 @@ function MdxTable({ children, ...props }: React.ComponentProps<'table'>) {
 
 function MdxThead({ children, ...props }: React.ComponentProps<'thead'>) {
   return (
-    <thead className='bg-[#1a1a1a] text-[#ffffff]' {...props}>
+    <thead className='bg-section text-foreground' {...props}>
       {children}
     </thead>
   );
@@ -66,7 +63,7 @@ function MdxThead({ children, ...props }: React.ComponentProps<'thead'>) {
 function MdxTh({ children, ...props }: React.ComponentProps<'th'>) {
   return (
     <th
-      className='border-b border-[#2b2b2b] px-4 py-3 text-left font-semibold'
+      className='border-b border-gray-900 px-4 py-3 text-left font-semibold'
       {...props}
     >
       {children}
@@ -76,7 +73,7 @@ function MdxTh({ children, ...props }: React.ComponentProps<'th'>) {
 
 function MdxTd({ children, ...props }: React.ComponentProps<'td'>) {
   return (
-    <td className='border-b border-[#2b2b2b] px-4 py-3' {...props}>
+    <td className='border-b border-gray-900 px-4 py-3' {...props}>
       {children}
     </td>
   );
@@ -84,29 +81,19 @@ function MdxTd({ children, ...props }: React.ComponentProps<'td'>) {
 
 function MdxTr({ children, ...props }: React.ComponentProps<'tr'>) {
   return (
-    <tr className='transition-colors hover:bg-[#1a1a1a]/50' {...props}>
+    <tr className='hover:bg-section/50 transition-colors' {...props}>
       {children}
     </tr>
   );
 }
 
-// ---------------------------------------------------------------------------
-// Mermaid diagram — renders the raw text inside a styled container.
-// Full client-side rendering would require a 'use client' wrapper + mermaid.js;
-// for now we render a readable fallback with the diagram source.
-// ---------------------------------------------------------------------------
-function Mermaid({ children }: { children?: React.ReactNode }) {
-  return (
-    <div className='my-6 rounded-lg border border-[#2b2b2b] bg-[#111827] p-4'>
-      <p className='mb-2 text-xs font-semibold tracking-wider text-[#6b7280] uppercase'>
-        Diagram
-      </p>
-      <pre className='font-mono text-sm whitespace-pre-wrap text-[#d1d5db]'>
-        {children}
-      </pre>
-    </div>
-  );
+function MdxTbody({ children, ...props }: React.ComponentProps<'tbody'>) {
+  return <tbody {...props}>{children}</tbody>;
 }
+
+// ---------------------------------------------------------------------------
+// Mermaid diagram — client component that renders with mermaid.js
+// ---------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------
 // Exported component map — passed to compileMDX
@@ -117,10 +104,11 @@ export const mdxComponents = {
   code: MdxCode,
   table: MdxTable,
   thead: MdxThead,
+  tbody: MdxTbody,
   th: MdxTh,
   td: MdxTd,
   tr: MdxTr,
   // Named components usable inside .mdx files as <Badge> / <Mermaid>
   Badge,
-  Mermaid,
+  Mermaid: MermaidChart,
 };

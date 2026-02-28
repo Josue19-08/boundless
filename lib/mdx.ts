@@ -2,6 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import { compileMDX } from 'next-mdx-remote/rsc';
+import remarkGfm from 'remark-gfm';
+import rehypePrism from 'rehype-prism-plus';
 import type { ReactElement } from 'react';
 import { mdxComponents } from '@/components/landing-page/blog/MdxComponents';
 
@@ -82,7 +84,13 @@ export async function getBlogPostBySlug(
   const { content } = await compileMDX({
     source: mdxSource,
     components: mdxComponents,
-    options: { parseFrontmatter: false },
+    options: {
+      parseFrontmatter: false,
+      mdxOptions: {
+        remarkPlugins: [remarkGfm],
+        rehypePlugins: [rehypePrism],
+      },
+    },
   });
 
   return {
