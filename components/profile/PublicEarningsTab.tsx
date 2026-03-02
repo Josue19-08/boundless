@@ -32,22 +32,22 @@ const SOURCE_CONFIG: Record<
   bounties: { label: 'Bounties', icon: Target, color: 'text-purple-400' },
 };
 
-function formatCurrency(amount: number): string {
+const formatCurrency = (amount: number, currency = 'USD'): string => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: 'USD',
+    currency,
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(amount);
-}
+};
 
 interface EarningActivityItemProps {
   activity: EarningActivity;
 }
 
-function EarningActivityItem({
+const EarningActivityItem = ({
   activity,
-}: EarningActivityItemProps): React.ReactElement {
+}: EarningActivityItemProps): React.ReactElement => {
   const config = SOURCE_CONFIG[activity.source];
   const Icon = config.icon;
 
@@ -72,37 +72,48 @@ function EarningActivityItem({
       </div>
       <div className='shrink-0 text-right'>
         <p className='text-primary text-lg font-bold'>
-          {formatCurrency(activity.amount)}
+          {formatCurrency(activity.amount, activity.currency)}
         </p>
-        <p className='text-xs text-zinc-500'>{activity.currency}</p>
       </div>
     </div>
   );
-}
+};
 
-export default function PublicEarningsTab({
+const PublicEarningsTab = ({
   username,
-}: PublicEarningsTabProps): React.ReactElement {
+}: PublicEarningsTabProps): React.ReactElement => {
   const [earnings, setEarnings] = useState<PublicEarningsResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function loadEarnings(): Promise<void> {
+    const controller = new AbortController();
+
+    const loadEarnings = async (): Promise<void> => {
       try {
         setLoading(true);
         setError(null);
         const response = await getPublicEarnings({ username });
-        setEarnings(response.data);
+        if (!controller.signal.aborted) {
+          setEarnings(response.data);
+        }
       } catch (err) {
-        setError('Unable to load earnings data');
-        console.error('Failed to load earnings:', err);
+        if (!controller.signal.aborted) {
+          setError('Unable to load earnings data');
+          console.error('Failed to load earnings:', err);
+        }
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
       }
-    }
+    };
 
     loadEarnings();
+
+    return () => {
+      controller.abort();
+    };
   }, [username]);
 
   if (loading) {
@@ -182,9 +193,9 @@ export default function PublicEarningsTab({
             Verified Activity
           </h3>
           <div className='space-y-3'>
-            {earnings.activities.map(activity => (
+            {earnings.activities.map((activity, index) => (
               <motion.div
-                key={activity.id}
+                key={`${activity.source}-${activity.occurredAt}-${index}`}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
               >
@@ -196,4 +207,6 @@ export default function PublicEarningsTab({
       )}
     </div>
   );
-}
+};
+
+export default PublicEarningsTab;
