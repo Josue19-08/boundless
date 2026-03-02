@@ -5,7 +5,6 @@ export type EarningSource =
   | 'bounties';
 
 export interface EarningActivity {
-  id: string;
   source: EarningSource;
   title: string;
   amount: number;
