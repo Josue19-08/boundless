@@ -17,6 +17,7 @@ import {
   EarningSource,
 } from '@/types/earnings';
 import { getPublicEarnings } from '@/lib/api/earnings';
+import EmptyState from '@/components/EmptyState';
 
 interface PublicEarningsTabProps {
   username: string;
@@ -59,21 +60,18 @@ const EarningActivityItem = ({
         <Icon className='h-5 w-5' />
       </div>
       <div className='min-w-0 flex-1'>
-        <p className='truncate font-medium text-white'>{activity.title}</p>
-        <div className='mt-1 flex flex-wrap items-center gap-2 text-sm text-zinc-500'>
-          <span className={config.color}>{config.label}</span>
-          <span>·</span>
-          <span>
-            {formatDistanceToNow(new Date(activity.occurredAt), {
-              addSuffix: true,
-            })}
-          </span>
-        </div>
+        <p className='truncate text-sm text-white'>{activity.title}</p>
+        <p className='mt-1 text-xs text-zinc-500'>
+          {formatDistanceToNow(new Date(activity.occurredAt), {
+            addSuffix: true,
+          })}
+        </p>
       </div>
       <div className='shrink-0 text-right'>
-        <p className='text-primary text-lg font-bold'>
+        <p className='text-primary text-sm font-bold'>
           {formatCurrency(activity.amount, activity.currency)}
         </p>
+        <p className={`text-xs ${config.color}`}>{config.label}</p>
       </div>
     </div>
   );
@@ -126,13 +124,23 @@ const PublicEarningsTab = ({
 
   if (error || !earnings) {
     return (
-      <div className='rounded-xl border border-zinc-800 bg-zinc-900/30 p-6 text-center'>
-        <p className='text-zinc-500'>{error || 'No earnings data available'}</p>
-      </div>
+      <EmptyState
+        type='compact'
+        title='No Earnings Data'
+        description={error || 'No earnings data available for this user yet.'}
+        action={<></>}
+      />
     );
   }
 
-  const breakdownItems = Object.entries(earnings.breakdown)
+  const breakdown = earnings.breakdown ?? {
+    hackathons: 0,
+    grants: 0,
+    crowdfunding: 0,
+    bounties: 0,
+  };
+
+  const breakdownItems = Object.entries(breakdown)
     .filter(([, amount]) => amount > 0)
     .sort(([, a], [, b]) => b - a) as [EarningSource, number][];
 
@@ -143,9 +151,9 @@ const PublicEarningsTab = ({
           <TrendingUp className='text-primary h-6 w-6' />
         </div>
         <div>
-          <p className='text-sm text-zinc-500'>Total Earned</p>
-          <p className='text-3xl font-bold text-white'>
-            {formatCurrency(earnings.summary.totalEarned)}
+          <p className='text-xs text-zinc-500'>Total Earned</p>
+          <p className='text-2xl font-bold text-white'>
+            {formatCurrency(earnings.summary?.totalEarned ?? 0)}
           </p>
         </div>
       </div>
@@ -187,13 +195,13 @@ const PublicEarningsTab = ({
         })}
       </div>
 
-      {earnings.activities.length > 0 && (
+      {(earnings.activities?.length ?? 0) > 0 && (
         <div className='space-y-4 border-t border-zinc-800 pt-6'>
-          <h3 className='text-sm font-medium text-zinc-400'>
+          <h3 className='text-xs font-semibold uppercase tracking-wider text-zinc-500'>
             Verified Activity
           </h3>
           <div className='space-y-3'>
-            {earnings.activities.map((activity, index) => (
+            {(earnings.activities ?? []).map((activity, index) => (
               <motion.div
                 key={`${activity.source}-${activity.occurredAt}-${index}`}
                 initial={{ opacity: 0, y: 10 }}
