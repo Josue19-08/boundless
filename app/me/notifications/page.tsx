@@ -17,6 +17,39 @@ import { Bell, CheckCheck } from 'lucide-react';
 
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 
+function NotificationsPageSkeleton() {
+  return (
+    <div className='space-y-8'>
+      {['New', 'Earlier', 'Archived'].map(sectionTitle => (
+        <section key={sectionTitle}>
+          <div className='mb-3 flex items-center gap-2'>
+            <Skeleton className='h-4 w-4 rounded' />
+            <Skeleton className='h-3 w-16' />
+            <Skeleton className='h-5 w-6 rounded-full' />
+          </div>
+          <div className='overflow-hidden rounded-xl border border-zinc-800/30'>
+            {[1, 2, 3].map(i => (
+              <div
+                key={i}
+                className='flex items-start gap-4 border-t border-zinc-800/30 p-4 first:border-t-0'
+              >
+                <Skeleton className='h-10 w-10 shrink-0 rounded-full' />
+                <div className='min-w-0 flex-1 space-y-2'>
+                  <div className='flex justify-between gap-2'>
+                    <Skeleton className='h-4 flex-1' />
+                    <Skeleton className='h-3 w-14 shrink-0' />
+                  </div>
+                  <Skeleton className='h-3 w-full max-w-[85%]' />
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+  );
+}
+
 type NotificationGroups = {
   new: Notification[];
   earlier: Notification[];
@@ -121,7 +154,7 @@ export default function NotificationsPage() {
 
   if (error) {
     return (
-      <div className='mx-auto max-w-4xl p-6'>
+      <div className='p-10'>
         <div className='rounded-lg border border-red-800/50 bg-red-950/20 p-8 text-center'>
           <p className='text-lg font-semibold text-red-400'>
             Error loading notifications
@@ -141,27 +174,24 @@ export default function NotificationsPage() {
 
   return (
     <AuthGuard redirectTo='/auth?mode=signin' fallback={<Loading />}>
-      <div className='mx-auto max-w-4xl p-6'>
-        {/* Header */}
-        <div className='mb-8 flex items-center justify-between'>
-          <div className='flex items-center gap-3'>
-            <div className='flex h-10 w-10 items-center justify-center rounded-full border border-zinc-800 bg-zinc-900/50'>
-              <Bell className='h-5 w-5 text-zinc-400' />
-            </div>
-            <div>
-              <h1 className='text-2xl font-bold text-white'>Notifications</h1>
-              <div className='mt-0.5 text-sm text-zinc-500'>
-                {loading ? (
-                  <Skeleton className='h-4 w-48' />
-                ) : (
-                  <>
-                    {unreadCount > 0
-                      ? `${unreadCount} unread of ${total} total`
-                      : `${total} notifications`}
-                  </>
-                )}
-              </div>
-            </div>
+      <div className='p-10'>
+        {/* Header – matches me layout (Settings, etc.) */}
+        <div className='mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
+          <div>
+            <h1 className='mb-2 text-2xl font-medium text-white'>
+              Notifications
+            </h1>
+            <p className='text-sm text-zinc-500'>
+              {loading ? (
+                <span className='inline-block h-4 w-48 animate-pulse rounded bg-zinc-800' />
+              ) : (
+                <>
+                  {unreadCount > 0
+                    ? `${unreadCount} unread of ${total} total`
+                    : `${total} notifications`}
+                </>
+              )}
+            </p>
           </div>
 
           <AnimatePresence>
@@ -188,11 +218,7 @@ export default function NotificationsPage() {
 
         {/* Feed */}
         {loading ? (
-          <div className='space-y-4'>
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Skeleton key={i} className='h-20 w-full rounded-xl' />
-            ))}
-          </div>
+          <NotificationsPageSkeleton />
         ) : notifications.length === 0 ? (
           <div className='rounded-xl border border-zinc-800/50 bg-zinc-900/30 p-16 text-center'>
             <div className='mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-zinc-800 bg-zinc-900'>

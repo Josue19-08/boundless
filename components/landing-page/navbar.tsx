@@ -33,7 +33,6 @@ import { WalletTrigger } from '../wallet/WalletTrigger';
 import { NotificationBell } from '../notifications/NotificationBell';
 import CreateProjectModal from '@/features/projects/components/CreateProjectModal';
 
-// Constants
 const BRAND_COLOR = '#a7f950';
 const ACTIONS = {
   CREATE_PROJECT: 'create project',
@@ -48,7 +47,6 @@ const MENU_ITEMS = [
   { href: '/blog', label: 'Blog' },
 ] as const;
 
-// Types
 interface UserProfile {
   firstName?: string | null;
   image?: string | null;
@@ -443,7 +441,6 @@ const MobileMenu = ({
               })}
             </nav>
 
-            {/* Actions - Only for authenticated users */}
             {isAuthenticated && (
               <div className='flex flex-col gap-3 border-t border-white/10 pt-6'>
                 {isLoading ? (
