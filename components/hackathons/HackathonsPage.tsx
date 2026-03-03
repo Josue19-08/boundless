@@ -38,8 +38,6 @@ const HackathonsPage: React.FC<HackathonsPageProps> = ({ className } = {}) => {
     totalCount,
     loadMore,
   } = useHackathonsList({ initialFilters: filters });
-  // const { transformHackathonForCard } = useHackathonTransform();
-  console.log(hackathons);
   const hackathonCards = React.useMemo(() => {
     return hackathons.map(hackathon => {
       return (

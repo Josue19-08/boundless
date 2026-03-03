@@ -82,7 +82,6 @@ export default function NewHackathonTab({
   // Define the callback after hooks are initialized
   const onDraftLoaded = useCallback(
     (formData: any, firstIncompleteStep: StepKey) => {
-      console.log('sjcdkformData', formData);
       setStepData(formData);
       setActiveTab(firstIncompleteStep);
 
@@ -323,7 +322,6 @@ export default function NewHackathonTab({
               isSavingDraft={isSavingDraft}
               organizationId={derivedOrgId}
               draftId={draftId}
-              publishResponse={publishResponse}
             />
           </TabsContent>
         </div>

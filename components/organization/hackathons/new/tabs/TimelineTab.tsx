@@ -77,77 +77,75 @@ export default function TimelineTab({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-10'>
-        <div className='grid gap-6 md:grid-cols-2'>
-          <FormField
-            control={form.control}
-            name='startDate'
-            render={({ field }) => (
-              <FormItem className='gap-3'>
-                <FieldLabel
-                  label='Start Time'
-                  required
-                  tooltip={TIMELINE_FIELD_TOOLTIPS.startDate}
-                />
-                <DateTimeInput
-                  field={field}
-                  placeholder='When participants can register.'
-                />
-                <FormMessage className='text-error-400 text-xs' />
-              </FormItem>
-            )}
-          />
+        <FormField
+          control={form.control}
+          name='startDate'
+          render={({ field }) => (
+            <FormItem className='gap-3'>
+              <FieldLabel
+                label='Start Time'
+                required
+                tooltip={TIMELINE_FIELD_TOOLTIPS.startDate}
+              />
+              <DateTimeInput
+                field={field}
+                placeholder='When participants can register.'
+              />
+              <FormMessage className='text-error-400 text-xs' />
+            </FormItem>
+          )}
+        />
 
-          <FormField
-            control={form.control}
-            name='submissionDeadline'
-            render={({ field }) => (
-              <FormItem className='gap-3'>
-                <FieldLabel
-                  label='Submission Deadline'
-                  required
-                  tooltip={TIMELINE_FIELD_TOOLTIPS.submissionDeadline}
-                />
-                <DateTimeInput
-                  field={field}
-                  placeholder='Final project submission deadline.'
-                />
-                <FormMessage className='text-error-400 text-xs' />
-              </FormItem>
-            )}
-          />
+        <FormField
+          control={form.control}
+          name='submissionDeadline'
+          render={({ field }) => (
+            <FormItem className='gap-3'>
+              <FieldLabel
+                label='Submission Deadline'
+                required
+                tooltip={TIMELINE_FIELD_TOOLTIPS.submissionDeadline}
+              />
+              <DateTimeInput
+                field={field}
+                placeholder='Final project submission deadline.'
+              />
+              <FormMessage className='text-error-400 text-xs' />
+            </FormItem>
+          )}
+        />
 
-          <FormField
-            control={form.control}
-            name='timezone'
-            render={({ field }) => (
-              <FormItem className='gap-3 md:col-span-2'>
-                <FieldLabel
-                  label='Timezone'
-                  required
-                  tooltip={TIMELINE_FIELD_TOOLTIPS.timezone}
-                />
-                <FormControl>
-                  <Select
-                    value={field.value || ''}
-                    onValueChange={field.onChange}
-                  >
-                    <SelectTrigger className='bg-background-card h-12 w-full rounded-[12px] border border-gray-900 px-4 text-sm text-white'>
-                      <SelectValue placeholder='Select a timezone' />
-                    </SelectTrigger>
-                    <SelectContent className='max-h-72'>
-                      {TIMEZONES.map(tz => (
-                        <SelectItem key={tz.value} value={tz.value}>
-                          {tz.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage className='text-error-400 text-xs' />
-              </FormItem>
-            )}
-          />
-        </div>
+        <FormField
+          control={form.control}
+          name='timezone'
+          render={({ field }) => (
+            <FormItem className='gap-3 md:col-span-2'>
+              <FieldLabel
+                label='Timezone'
+                required
+                tooltip={TIMELINE_FIELD_TOOLTIPS.timezone}
+              />
+              <FormControl>
+                <Select
+                  value={field.value || ''}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger className='bg-background-card h-12 w-full rounded-[12px] border border-gray-900 px-4 text-sm text-white'>
+                    <SelectValue placeholder='Select a timezone' />
+                  </SelectTrigger>
+                  <SelectContent className='max-h-72'>
+                    {TIMEZONES.map(tz => (
+                      <SelectItem key={tz.value} value={tz.value}>
+                        {tz.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage className='text-error-400 text-xs' />
+            </FormItem>
+          )}
+        />
 
         {/* Pre-Registration End Time Section */}
         <div className='space-y-6'>
