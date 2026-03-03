@@ -2,8 +2,9 @@
 import { useRouter } from 'nextjs-toploader/app';
 import Image from 'next/image';
 import { MapPinIcon } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Hackathon } from '@/lib/api/hackathons';
+import { cn } from '@/lib/utils';
 
 // type HackathonCardProps = {
 //   id: string;
@@ -157,7 +158,13 @@ function calculateTimeRemaining(targetDate: string): TimeRemaining {
 //   }
 // }
 
-function HackathonCard({
+interface HackathonCardProps extends Hackathon {
+  isFullWidth?: boolean;
+  className?: string;
+  target?: string;
+}
+
+export const HackathonCard = ({
   id,
   slug,
   name,
@@ -176,8 +183,9 @@ function HackathonCard({
   categories,
   prizeTiers,
   isFullWidth = false,
-  // className,
-}: Hackathon & { isFullWidth?: boolean }) {
+  className,
+  target,
+}: HackathonCardProps) => {
   const router = useRouter();
   const [timeRemaining, setTimeRemaining] = useState<TimeRemaining>({
     days: 0,
@@ -188,11 +196,17 @@ function HackathonCard({
   });
   const handleClick = () => {
     const slugPath = slug || id || '';
-    router.push(`/hackathons/${slugPath}`);
+    const url = `/hackathons/${slugPath}`;
+    if (target === '_blank') {
+      window.open(url, '_blank');
+    } else {
+      router.push(url);
+    }
   };
 
-  // Determine top badge status using raw dates
-  const getTopBadgeStatus = () => {
+  // Determine top badge status using raw dates — memoised so it can safely
+  // appear in the useEffect dependency array without triggering infinite loops.
+  const getTopBadgeStatus = useCallback(() => {
     if (status === 'ARCHIVED') {
       return 'Archived';
     }
@@ -215,7 +229,7 @@ function HackathonCard({
 
     // Otherwise it's upcoming
     return 'Upcoming';
-  };
+  }, [status, startDate, submissionDeadline]);
 
   const getTopBadgeColor = () => {
     const badgeStatus = getTopBadgeStatus();
@@ -331,7 +345,7 @@ function HackathonCard({
 
       return () => clearInterval(interval);
     }
-  }, [status, startDate, submissionDeadline]);
+  }, [status, startDate, submissionDeadline, getTopBadgeStatus]);
 
   const bottomStatusInfo = getBottomStatusInfo();
   const topBadgeStatus = getTopBadgeStatus();
@@ -351,9 +365,9 @@ function HackathonCard({
   // })();
 
   const CategoriesDisplay = ({
-    categoriesList,
+    categoriesList = [],
   }: {
-    categoriesList: string[];
+    categoriesList?: string[];
   }) => {
     const MAX_VISIBLE = 3;
 
@@ -385,9 +399,11 @@ function HackathonCard({
   return (
     <div
       onClick={handleClick}
-      className={`group flex cursor-pointer flex-col overflow-hidden rounded-xl border border-neutral-800 bg-[#0c0c0c] transition-all duration-300 hover:border-neutral-700 hover:shadow-lg hover:shadow-black/40 ${
-        isFullWidth ? 'w-full' : 'max-w-[400px]'
-      }`}
+      className={cn(
+        'group flex cursor-pointer flex-col overflow-hidden rounded-xl border border-neutral-800 bg-[#0c0c0c] transition-all duration-300 hover:border-neutral-700 hover:shadow-lg hover:shadow-black/40',
+        isFullWidth ? 'w-full' : 'max-w-[400px]',
+        className
+      )}
     >
       {/* Image */}
       <div className='relative h-44 overflow-hidden sm:h-52'>
@@ -410,13 +426,17 @@ function HackathonCard({
         </div>
 
         <div className='absolute bottom-3 left-3 flex items-center gap-2'>
-          <div
-            style={{ backgroundImage: `url(${organization.logo})` }}
-            className='size-7 rounded-full border border-white/20 bg-white bg-cover bg-center'
-          />
-          <span className='text-xs font-medium text-white/90 drop-shadow-md'>
-            {organization.name}
-          </span>
+          {organization?.logo && (
+            <div
+              style={{ backgroundImage: `url(${organization.logo})` }}
+              className='size-7 rounded-full border border-white/20 bg-white bg-cover bg-center'
+            />
+          )}
+          {organization?.name && (
+            <span className='text-xs font-medium text-white/90 drop-shadow-md'>
+              {organization.name}
+            </span>
+          )}
         </div>
       </div>
 
@@ -477,6 +497,6 @@ function HackathonCard({
       </div>
     </div>
   );
-}
+};
 
 export default HackathonCard;

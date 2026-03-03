@@ -81,7 +81,9 @@ const BreakdownItem: React.FC<BreakdownItemProps> = ({
       </div>
       <span className='font-medium'>{label}</span>
     </div>
-    <span className='font-semibold'>${value.toLocaleString()}</span>
+    <span className='font-semibold'>
+      ${(Number(value) || 0).toLocaleString()}
+    </span>
   </div>
 );
 
@@ -106,7 +108,9 @@ const ActivityItem: React.FC<ActivityItemProps> = ({ activity }) => (
       </div>
     </div>
     <div className='text-right'>
-      <p className='text-lg font-bold'>${activity.amount.toLocaleString()}</p>
+      <p className='text-lg font-bold'>
+        ${(Number(activity.amount) || 0).toLocaleString()}
+      </p>
       {activity.currency && (
         <p className='text-muted-foreground text-xs'>{activity.currency}</p>
       )}
@@ -118,7 +122,7 @@ const ActivityItem: React.FC<ActivityItemProps> = ({ activity }) => (
  * EarningsSkeleton component for loading states.
  */
 const EarningsSkeleton: React.FC = () => (
-  <div className='container mx-auto space-y-8 py-8'>
+  <div className='container mx-auto space-y-8 px-6 py-8'>
     <div className='space-y-2'>
       <Skeleton className='h-10 w-[250px]' />
       <Skeleton className='h-6 w-[350px]' />
@@ -146,8 +150,10 @@ const EarningsPage: React.FC = () => {
     const fetchData = async () => {
       try {
         const res = await getUserEarnings();
-        if (res.success && res.data) {
+        if (res.success) {
           setData(res.data);
+        } else {
+          toast.error(res.error || 'Failed to load earnings data');
         }
       } catch (error) {
         console.error('Failed to fetch earnings:', error);
@@ -174,7 +180,7 @@ const EarningsPage: React.FC = () => {
   }
 
   return (
-    <div className='container mx-auto space-y-8 py-8'>
+    <div className='container mx-auto space-y-8 px-6 py-8'>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
