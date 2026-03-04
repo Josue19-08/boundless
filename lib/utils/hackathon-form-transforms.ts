@@ -221,14 +221,24 @@ export const transformFromApiFormat = (draft: HackathonDraft) => {
     } as ParticipantFormData,
     rewards: {
       prizeTiers:
-        rewards?.prizeTiers?.map((tier, index) => ({
-          id: `tier-${index}`,
-          place: tier.place,
-          prizeAmount: tier.prizeAmount || '0',
-          currency: tier.currency || 'USDC',
-          description: tier.description || '',
-          passMark: tier.passMark,
-        })) || [],
+        rewards?.prizeTiers?.map((tier, index) => {
+          const defaultPassMarks = [80, 70, 50, 40, 30];
+          const passMark =
+            tier.passMark != null && tier.passMark >= 0 && tier.passMark <= 100
+              ? tier.passMark
+              : (defaultPassMarks[index] ?? 50);
+          return {
+            id: tier.id ?? `tier-${index}`,
+            place:
+              tier.place ||
+              `${index + 1}${['st', 'nd', 'rd'][index] ?? 'th'} Place`,
+            prizeAmount: tier.prizeAmount ?? '0',
+            currency: tier.currency || 'USDC',
+            description: tier.description || '',
+            rank: index + 1,
+            passMark,
+          };
+        }) || [],
     } as RewardsFormData,
     resources: {
       resources:
@@ -246,12 +256,21 @@ export const transformFromApiFormat = (draft: HackathonDraft) => {
     } as ResourcesFormData,
     judging: {
       criteria:
-        judging?.criteria?.map((criterion, index) => ({
-          id: `criterion-${index}`,
-          name: criterion.title,
-          weight: criterion.weight,
-          description: criterion.description || '',
-        })) || [],
+        judging?.criteria?.map((criterion, index) => {
+          const c = criterion as {
+            title?: string;
+            name?: string;
+            weight?: number;
+            description?: string;
+          };
+          const titleOrName = (c.title ?? c.name ?? '').trim();
+          return {
+            id: `criterion-${index}`,
+            name: titleOrName || `Criterion ${index + 1}`,
+            weight: typeof criterion.weight === 'number' ? criterion.weight : 0,
+            description: criterion.description || '',
+          };
+        }) || [],
     } as JudgingFormData,
     collaboration: {
       contactEmail: collaboration?.contactEmail || '',

@@ -75,33 +75,67 @@ const tabVisibility = [
   { name: 'rulesTab' as const, label: 'Rules' },
 ];
 
+const defaultParticipantValues: ParticipantFormData = {
+  participantType: 'individual',
+  teamMin: 2,
+  teamMax: 5,
+  maxParticipants: undefined,
+  require_github: true,
+  require_demo_video: true,
+  require_other_links: true,
+  detailsTab: true,
+  participantsTab: true,
+  resourcesTab: true,
+  submissionTab: true,
+  announcementsTab: true,
+  discussionTab: true,
+  winnersTab: true,
+  sponsorsTab: true,
+  joinATeamTab: true,
+  rulesTab: true,
+};
+
+function normalizeParticipantInitialData(
+  data: ParticipantFormData | undefined
+): ParticipantFormData {
+  if (!data) return defaultParticipantValues;
+  const type = data.participantType;
+  const needsTeamSize = type === 'team' || type === 'team_or_individual';
+  return {
+    ...defaultParticipantValues,
+    ...data,
+    teamMin: needsTeamSize
+      ? data.teamMin && data.teamMin >= 1
+        ? data.teamMin
+        : 2
+      : data.teamMin,
+    teamMax: needsTeamSize
+      ? data.teamMax && data.teamMax >= 1
+        ? data.teamMax
+        : 5
+      : data.teamMax,
+    maxParticipants:
+      data.maxParticipants != null && data.maxParticipants >= 1
+        ? data.maxParticipants
+        : undefined,
+  };
+}
+
 export default function ParticipantTab({
+  onContinue,
   onSave,
   initialData,
   isLoading = false,
   isRegistrationClosed = false,
 }: ParticipantTabProps) {
+  const normalizedInitial = React.useMemo(
+    () => normalizeParticipantInitialData(initialData),
+    [initialData]
+  );
+
   const form = useForm<ParticipantFormData>({
     resolver: zodResolver(participantSchema),
-    defaultValues: initialData || {
-      participantType: 'individual',
-      teamMin: 2,
-      teamMax: 5,
-      maxParticipants: undefined,
-      require_github: true,
-      require_demo_video: true,
-      require_other_links: true,
-      detailsTab: true,
-      participantsTab: true,
-      resourcesTab: true,
-      submissionTab: true,
-      announcementsTab: true,
-      discussionTab: true,
-      winnersTab: true,
-      sponsorsTab: true,
-      joinATeamTab: true,
-      rulesTab: true,
-    },
+    defaultValues: normalizedInitial,
   });
 
   const participantType = form.watch('participantType');
@@ -110,15 +144,16 @@ export default function ParticipantTab({
     maxParticipants !== undefined && maxParticipants !== null;
 
   React.useEffect(() => {
-    if (initialData) {
-      form.reset(initialData);
-    }
-  }, [initialData, form]);
+    form.reset(normalizedInitial);
+  }, [normalizedInitial, form]);
 
   const onSubmit = async (data: ParticipantFormData) => {
     try {
       if (onSave) {
         await onSave(data);
+      }
+      if (onContinue) {
+        onContinue();
       }
     } catch (error: unknown) {
       const err = error as {
@@ -182,9 +217,23 @@ export default function ParticipantTab({
     </div>
   );
 
+  const handleInvalid = (errors: Record<string, { message?: string }>) => {
+    const firstKey = Object.keys(errors)[0];
+    const firstMessage =
+      firstKey && errors[firstKey]?.message
+        ? errors[firstKey].message
+        : undefined;
+    toast.error('Please fix the errors below before continuing.', {
+      description: firstMessage,
+    });
+  };
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
+      <form
+        onSubmit={form.handleSubmit(onSubmit, handleInvalid)}
+        className='space-y-8'
+      >
         {/* Participant Type */}
         <div className='space-y-4'>
           <div>

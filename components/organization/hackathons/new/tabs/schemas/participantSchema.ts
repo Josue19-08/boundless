@@ -7,7 +7,10 @@ export const participantSchema = z
       .default('individual'),
     teamMin: z.number().min(1).max(20).optional(),
     teamMax: z.number().min(1).max(20).optional(),
-    maxParticipants: z.number().int().min(1).optional(),
+    maxParticipants: z
+      .union([z.number().int().min(1), z.null()])
+      .optional()
+      .transform(val => (val === null ? undefined : val)),
     require_github: z.boolean().optional(),
     require_demo_video: z.boolean().optional(),
     require_other_links: z.boolean().optional(),
