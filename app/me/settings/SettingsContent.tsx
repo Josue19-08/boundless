@@ -8,6 +8,7 @@ import { getMe } from '@/lib/api/auth';
 import { GetMeResponse } from '@/lib/api/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import Settings from '@/components/profile/update/Settings';
+import { SecuritySettingsTab } from '@/components/profile/update/SecuritySettingsTab';
 import { IdentityVerificationSection } from '@/components/didit/IdentityVerificationSection';
 import { invalidateAuthProfileCache } from '@/hooks/use-auth';
 
@@ -116,6 +117,18 @@ const SettingsContent = () => {
           </TabsContent>
           <TabsContent value='settings'>
             <Settings />
+          </TabsContent>
+          <TabsContent value='notifications' className='space-y-6'>
+            <Settings visibleSections={['notifications']} />
+          </TabsContent>
+          <TabsContent value='privacy' className='space-y-6'>
+            <Settings visibleSections={['privacy']} />
+          </TabsContent>
+          <TabsContent value='preferences' className='space-y-6'>
+            <Settings visibleSections={['appearance', 'preferences']} />
+          </TabsContent>
+          <TabsContent value='security' className='space-y-6'>
+            <SecuritySettingsTab />
           </TabsContent>
           <TabsContent value='identity' className='space-y-6'>
             <IdentityVerificationSection
