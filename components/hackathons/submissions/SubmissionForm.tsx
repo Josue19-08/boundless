@@ -468,14 +468,15 @@ const SubmissionFormContent: React.FC<SubmissionFormContentProps> = ({
     form.setValue('links', updatedLinks, { shouldValidate: true });
   };
 
-  // Team size configuration and computed state
-  const teamMin = currentHackathon?.teamMin ?? 1;
-  const teamMax = currentHackathon?.teamMax ?? 10;
+  // Team size configuration and computed state (only when hackathon defines limits)
+  const teamMin = currentHackathon?.teamMin;
+  const teamMax = currentHackathon?.teamMax;
+  const hasTeamLimits = teamMin !== undefined && teamMax !== undefined;
   const watchedTeamMembers = form.watch('teamMembers');
   const currentTeamSize = (watchedTeamMembers?.length ?? 0) + 1;
-  const isTeamAtCapacity = currentTeamSize >= teamMax;
-  const isTeamBelowMinimum = currentTeamSize < teamMin;
-  const membersNeededForMinimum = teamMin - currentTeamSize;
+  const isTeamAtCapacity = hasTeamLimits && currentTeamSize >= teamMax;
+  const isTeamBelowMinimum = hasTeamLimits && currentTeamSize < teamMin;
+  const membersNeededForMinimum = hasTeamLimits ? teamMin - currentTeamSize : 0;
 
   function getTeamSizeBadgeStyle(): string {
     if (isTeamAtCapacity) {
@@ -967,22 +968,24 @@ const SubmissionFormContent: React.FC<SubmissionFormContentProps> = ({
                       <div className='flex items-center justify-between'>
                         <FormLabel className='text-white'>
                           Invite Members
-                          {teamMin > 1 && (
+                          {hasTeamLimits && teamMin > 1 && (
                             <span className='ml-1 text-xs text-gray-400'>
                               (min {teamMin} members)
                             </span>
                           )}
                         </FormLabel>
-                        <Badge
-                          variant='outline'
-                          className={cn(
-                            'transition-colors',
-                            getTeamSizeBadgeStyle()
-                          )}
-                        >
-                          <Users className='mr-1 h-3 w-3' />
-                          {currentTeamSize} / {teamMax} members
-                        </Badge>
+                        {hasTeamLimits && (
+                          <Badge
+                            variant='outline'
+                            className={cn(
+                              'transition-colors',
+                              getTeamSizeBadgeStyle()
+                            )}
+                          >
+                            <Users className='mr-1 h-3 w-3' />
+                            {currentTeamSize} / {teamMax} members
+                          </Badge>
+                        )}
                       </div>
                       {isTeamBelowMinimum && (
                         <p className='text-xs text-orange-400'>
