@@ -1,8 +1,4 @@
-import {
-  TransactionBuilder,
-  BASE_FEE,
-  rpc as SorobanRpc,
-} from '@stellar/stellar-sdk';
+import { TransactionBuilder, rpc as SorobanRpc } from '@stellar/stellar-sdk';
 import type { AssembledTransaction } from '@stellar/stellar-sdk/contract';
 import { getRpcUrl, getNetworkPassphrase } from './index';
 
@@ -19,32 +15,31 @@ export async function simulateContract<T>(
 
 /**
  * Build an unsigned transaction XDR from an AssembledTransaction.
- * The returned XDR can be passed to a wallet for signing.
+ * Simulates the transaction to populate Soroban data (footprint, auth entries),
+ * then returns the XDR ready for wallet signing.
  */
 export async function buildTransaction<T>(
-  tx: AssembledTransaction<T>,
-  sourcePublicKey: string
+  tx: AssembledTransaction<T>
 ): Promise<string> {
-  const server = new SorobanRpc.Server(getRpcUrl());
-  const account = await server.getAccount(sourcePublicKey);
-
-  const builtTx = new TransactionBuilder(account, {
-    fee: BASE_FEE,
-    networkPassphrase: getNetworkPassphrase(),
-  })
-    .setTimeout(30)
-    .build();
-
-  await server.simulateTransaction(builtTx);
-
+  await tx.simulate();
   return tx.toXDR();
+}
+
+export interface SubmitTransactionResult {
+  hash: string;
+  getResponse: SorobanRpc.Api.GetTransactionResponse;
 }
 
 /**
  * Submit a signed transaction XDR to the network.
- * Returns the transaction hash on success.
+ * Polls until confirmed or until maxWaitSeconds is reached.
+ * Returns the hash and the final GetTransactionResponse so callers
+ * can access write-method return values.
  */
-export async function submitTransaction(signedXdr: string): Promise<string> {
+export async function submitTransaction(
+  signedXdr: string,
+  maxWaitSeconds = 30
+): Promise<SubmitTransactionResult> {
   const server = new SorobanRpc.Server(getRpcUrl());
 
   const sendResponse = await server.sendTransaction(
@@ -58,9 +53,15 @@ export async function submitTransaction(signedXdr: string): Promise<string> {
   }
 
   const hash = sendResponse.hash;
+  const deadline = Date.now() + maxWaitSeconds * 1000;
   let getResponse = await server.getTransaction(hash);
 
   while (getResponse.status === SorobanRpc.Api.GetTransactionStatus.NOT_FOUND) {
+    if (Date.now() > deadline) {
+      throw new Error(
+        `Transaction ${hash} not confirmed within ${maxWaitSeconds}s`
+      );
+    }
     await new Promise(resolve => setTimeout(resolve, 1000));
     getResponse = await server.getTransaction(hash);
   }
@@ -69,5 +70,5 @@ export async function submitTransaction(signedXdr: string): Promise<string> {
     throw new Error(`Transaction failed: ${hash}`);
   }
 
-  return hash;
+  return { hash, getResponse };
 }

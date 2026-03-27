@@ -11,6 +11,9 @@ export type {
   ProjectRegistryClient,
 };
 export * from './bounty-registry/src/index';
+export * as coreEscrowBindings from './core-escrow/src/index';
+export * as reputationRegistryBindings from './reputation-registry/src/index';
+export * as projectRegistryBindings from './project-registry/src/index';
 export * from './transaction';
 
 // ─── Network config ────────────────────────────────────────────────────────────
@@ -29,21 +32,46 @@ const NETWORK_PASSPHRASES: Record<string, string> = {
 };
 
 // ─── Contract addresses ────────────────────────────────────────────────────────
+// Testnet defaults are provided for convenience. For mainnet, set the
+// corresponding NEXT_PUBLIC_*_CONTRACT_ID environment variables explicitly.
+
+const TESTNET_ADDRESSES = {
+  bountyRegistry: 'CBWXIV3DERH4GKADOTEEI2QADGZAMMJT4T2B5LFVZULGHEP5BACK2TLY',
+  coreEscrow: 'CA3VZVIMGLVG5EJF2ACB3LPMGQ6PID4TJTB3D2B3L6JIZRIS7NQPVPHN',
+  reputationRegistry:
+    'CBVQEDH4T5KOJQSESL2HEFI2YZWXPSZQ5TASKRNWAVZFIWAKEU74RFF4',
+  projectRegistry: 'CCG4QM2GZKBN7GBRAE3PFNE3GM2B6QRS7FOKLHGV2FT2HHETIS7JUVYT',
+} as const;
+
+function resolveAddress(
+  envVar: string | undefined,
+  contractKey: keyof typeof TESTNET_ADDRESSES
+): string {
+  if (envVar) return envVar;
+  if (STELLAR_NETWORK === 'testnet') return TESTNET_ADDRESSES[contractKey];
+  throw new Error(
+    `Contract address for "${contractKey}" must be set via environment variable on mainnet.`
+  );
+}
 
 const CONTRACT_ADDRESSES = {
-  bountyRegistry:
-    process.env.NEXT_PUBLIC_BOUNTY_REGISTRY_CONTRACT_ID ??
-    'CBWXIV3DERH4GKADOTEEI2QADGZAMMJT4T2B5LFVZULGHEP5BACK2TLY',
-  coreEscrow:
-    process.env.NEXT_PUBLIC_CORE_ESCROW_CONTRACT_ID ??
-    'CA3VZVIMGLVG5EJF2ACB3LPMGQ6PID4TJTB3D2B3L6JIZRIS7NQPVPHN',
-  reputationRegistry:
-    process.env.NEXT_PUBLIC_REPUTATION_REGISTRY_CONTRACT_ID ??
-    'CBVQEDH4T5KOJQSESL2HEFI2YZWXPSZQ5TASKRNWAVZFIWAKEU74RFF4',
-  projectRegistry:
-    process.env.NEXT_PUBLIC_PROJECT_REGISTRY_CONTRACT_ID ??
-    'CCG4QM2GZKBN7GBRAE3PFNE3GM2B6QRS7FOKLHGV2FT2HHETIS7JUVYT',
-} as const;
+  bountyRegistry: resolveAddress(
+    process.env.NEXT_PUBLIC_BOUNTY_REGISTRY_CONTRACT_ID,
+    'bountyRegistry'
+  ),
+  coreEscrow: resolveAddress(
+    process.env.NEXT_PUBLIC_CORE_ESCROW_CONTRACT_ID,
+    'coreEscrow'
+  ),
+  reputationRegistry: resolveAddress(
+    process.env.NEXT_PUBLIC_REPUTATION_REGISTRY_CONTRACT_ID,
+    'reputationRegistry'
+  ),
+  projectRegistry: resolveAddress(
+    process.env.NEXT_PUBLIC_PROJECT_REGISTRY_CONTRACT_ID,
+    'projectRegistry'
+  ),
+};
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
 
